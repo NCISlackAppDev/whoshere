@@ -140,14 +140,12 @@ async function buildPresenceBlocks(client, groupHandle) {
 
   const members = await fetchMemberData(client, userIds);
 
-  // Sort: active first, then alpha by name
-  members.sort((a, b) => {
-    if (a.presence !== b.presence) return a.presence === 'active' ? -1 : 1;
-    return a.name.localeCompare(b.name);
-  });
-
-  const activeCount = members.filter((m) => m.presence === 'active').length;
+  // Filter to active only, sort alpha
   const totalCount = members.length;
+  const activeMembers = members
+    .filter((m) => m.presence === 'active')
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const activeCount = activeMembers.length;
   const ts = new Date().toLocaleTimeString('en-US', {
     hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
   });
@@ -167,7 +165,7 @@ async function buildPresenceBlocks(client, groupHandle) {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `🟢 *${activeCount} active* · ⚫ ${totalCount - activeCount} away · ${totalCount} total  _(as of ${ts})_`,
+        text: `🟢 *${activeCount} active* of ${totalCount} total  _(as of ${ts})_`,
       },
     },
     { type: 'divider' },
@@ -181,7 +179,7 @@ async function buildPresenceBlocks(client, groupHandle) {
     },
     { type: 'divider' },
     // One row per member
-    ...members.map(memberBlock),
+    ...activeMembers.map(memberBlock),
     // Footer
     { type: 'divider' },
     {
