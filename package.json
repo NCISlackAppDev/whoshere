@@ -1,0 +1,15 @@
+{
+  "name": "whoshere",
+  "version": "1.0.0",
+  "description": "Slack slash command: /whoshere <group> — ephemeral presence roster with status and location",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@slack/bolt": "^3.18.0"
+  }
+}
